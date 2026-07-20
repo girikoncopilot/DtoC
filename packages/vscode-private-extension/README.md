@@ -1,31 +1,33 @@
 # AI Engineering Framework Private VS Code Extension
 
-This package is the thin client for the AI Engineering Framework.
-
-It is intentionally designed to avoid shipping the full framework implementation to client repositories.
+This package bundles the AI Engineering Framework directly into a private VS Code extension for internal testing.
 
 ## What this extension contains
 
 - a reusable `DtoC` prompt exposed as a VS Code chat slash command
-- a minimal instruction file for repository-safe runtime behavior
-- commands for backend health checks and prompt preparation
+- a bundled copy of the framework assets from the repository root
+- a runtime instruction file that tells the workflow to use the packaged framework resources
+- commands for backend health checks, prompt preparation, and opening the bundled framework overview
 
-## What this extension does not contain
+## Bundled framework assets
 
-- the full internal framework repository
-- private orchestration logic
-- internal prompt history
-- internal design or planning notes
+The extension packages these framework resources into `bundled-framework/` during build and package time:
 
-## Intended architecture
+- `copilot-instructions.md`
+- `prompts/`
+- `instructions/`
+- `runtime/`
+- `hooks/`
+- `agents/`
+- `skills/`
 
-- VS Code extension = thin user experience layer
-- private backend or MCP = proprietary orchestration layer
+This is intended to make the extension behave much closer to the original repo-based workflow even when the user workspace does not contain the framework files.
 
 ## Commands
 
 - `AI Engineering Framework: Check Backend`
 - `AI Engineering Framework: Open DtoC Prompt`
+- `AI Engineering Framework: Open Bundled Framework Overview`
 - `AI Engineering Framework: Prepare DtoC Chat Command`
 
 ## Configuration
@@ -34,33 +36,18 @@ It is intentionally designed to avoid shipping the full framework implementation
 - `aiEngineeringFramework.projectId`
 - `aiEngineeringFramework.healthEndpoint`
 
-## Packaging
-
-Build the extension:
+## Build
 
 ```bash
-npm install
-npm run build
+pnpm install
+pnpm run build
 ```
 
-Create a production bundle:
+## Package
 
 ```bash
-npm run package
+pnpm run package
+pnpm run vsix
 ```
 
-Create a `.vsix` package:
-
-```bash
-npm run vsix
-```
-
-This runs through `vsce package`, which uses the `vscode:prepublish` script automatically before packaging.
-
-## Install the VSIX
-
-```bash
-code --install-extension ai-engineering-framework-private-0.1.0.vsix
-```
-
-Use your preferred private distribution channel to share the `.vsix` file.
+The `bundle:framework` step runs automatically before build/package and refreshes `bundled-framework/` from the repository root.

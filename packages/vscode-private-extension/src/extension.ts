@@ -8,6 +8,10 @@ function getPromptUri(extensionUri: vscode.Uri) {
   return vscode.Uri.joinPath(extensionUri, "prompts", "DtoC.prompt.md");
 }
 
+function getBundledFrameworkOverviewUri(extensionUri: vscode.Uri) {
+  return vscode.Uri.joinPath(extensionUri, "bundled-framework", "README.md");
+}
+
 export function activate(context: vscode.ExtensionContext) {
   const checkBackend = vscode.commands.registerCommand(
     "aiEngineeringFramework.checkBackend",
@@ -18,7 +22,7 @@ export function activate(context: vscode.ExtensionContext) {
 
       if (!backendUrl) {
         void vscode.window.showWarningMessage(
-          "Set aiEngineeringFramework.backendUrl before checking backend health."
+          "No backend URL is configured. The extension can still use its bundled framework assets for internal testing, but private backend checks require aiEngineeringFramework.backendUrl."
         );
         return;
       }
@@ -61,6 +65,15 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  const openBundledFrameworkOverview = vscode.commands.registerCommand(
+    "aiEngineeringFramework.openBundledFrameworkOverview",
+    async () => {
+      const overviewUri = getBundledFrameworkOverviewUri(context.extensionUri);
+      const document = await vscode.workspace.openTextDocument(overviewUri);
+      await vscode.window.showTextDocument(document, { preview: false });
+    }
+  );
+
   const prepareDtoCCommand = vscode.commands.registerCommand(
     "aiEngineeringFramework.prepareDtoCCommand",
     async () => {
@@ -82,7 +95,12 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
-  context.subscriptions.push(checkBackend, openDtoCPrompt, prepareDtoCCommand);
+  context.subscriptions.push(
+    checkBackend,
+    openDtoCPrompt,
+    openBundledFrameworkOverview,
+    prepareDtoCCommand
+  );
 }
 
 export function deactivate() {

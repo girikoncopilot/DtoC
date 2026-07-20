@@ -1,7 +1,7 @@
 {
   "name": "ai-engineering-framework-private",
   "displayName": "AI Engineering Framework",
-  "description": "Private VS Code extension that contributes thin prompt and instruction assets for the AI Engineering Framework while delegating proprietary orchestration to a private backend.",
+  "description": "Private VS Code extension that bundles the AI Engineering Framework resources for internal testing and exposes DtoC as a packaged workflow entry point.",
   "version": "0.1.0",
   "publisher": "private",
   "private": true,
@@ -35,7 +35,8 @@
   "activationEvents": [
     "onCommand:aiEngineeringFramework.checkBackend",
     "onCommand:aiEngineeringFramework.openDtoCPrompt",
-    "onCommand:aiEngineeringFramework.prepareDtoCCommand"
+    "onCommand:aiEngineeringFramework.prepareDtoCCommand",
+    "onCommand:aiEngineeringFramework.openBundledFrameworkOverview"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -51,6 +52,10 @@
       {
         "command": "aiEngineeringFramework.prepareDtoCCommand",
         "title": "AI Engineering Framework: Prepare DtoC Chat Command"
+      },
+      {
+        "command": "aiEngineeringFramework.openBundledFrameworkOverview",
+        "title": "AI Engineering Framework: Open Bundled Framework Overview"
       }
     ],
     "configuration": {
@@ -86,13 +91,14 @@
   },
   "scripts": {
     "check-types": "tsc --noEmit -p .",
-    "build": "npm run check-types && node esbuild.js",
+    "build": "npm run bundle:framework && npm run check-types && node esbuild.js",
     "watch": "npm-run-all -p watch:types watch:bundle",
     "watch:types": "tsc --noEmit -w -p .",
     "watch:bundle": "node esbuild.js --watch",
-    "package": "npm run check-types && node esbuild.js --production",
+    "package": "npm run bundle:framework && npm run check-types && node esbuild.js --production",
     "vscode:prepublish": "npm run package",
-    "vsix": "vsce package --no-yarn --allow-missing-repository"
+    "vsix": "vsce package --no-yarn --allow-missing-repository",
+    "bundle:framework": "node scripts/bundle-framework.mjs"
   },
   "devDependencies": {
     "@vscode/vsce": "^3.6.2",
