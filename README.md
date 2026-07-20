@@ -1,6 +1,6 @@
 # AI Engineering Framework
 
-AI Engineering Framework is a repository-native workflow system for turning Jira requirements, design references, and engineering context into structured implementation execution.
+DtoC AI Engineering Framework is a repository-native workflow system for turning Jira requirements, design references, and engineering context into structured implementation execution.
 
 This repository currently includes:
 
