@@ -1,0 +1,13 @@
+.gitignore
+.vscode/**
+dist/**/*.map
+docs/**
+esbuild.js
+pnpm-lock.yaml
+pnpm-workspace.yaml
+package-lock.json
+yarn.lock
+src/**
+tsconfig.json
+node_modules/**
+*.ts

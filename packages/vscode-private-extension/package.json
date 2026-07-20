@@ -1,0 +1,105 @@
+{
+  "name": "ai-engineering-framework-private",
+  "displayName": "AI Engineering Framework",
+  "description": "Private VS Code extension that contributes thin prompt and instruction assets for the AI Engineering Framework while delegating proprietary orchestration to a private backend.",
+  "version": "0.1.0",
+  "publisher": "private",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "engines": {
+    "vscode": "^1.104.0"
+  },
+  "categories": [
+    "Machine Learning",
+    "Other"
+  ],
+  "keywords": [
+    "copilot",
+    "prompt-files",
+    "chat-instructions",
+    "jira",
+    "angular",
+    "private-extension"
+  ],
+  "extensionKind": [
+    "ui"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true
+    },
+    "virtualWorkspaces": {
+      "supported": true
+    }
+  },
+  "activationEvents": [
+    "onCommand:aiEngineeringFramework.checkBackend",
+    "onCommand:aiEngineeringFramework.openDtoCPrompt",
+    "onCommand:aiEngineeringFramework.prepareDtoCCommand"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "aiEngineeringFramework.checkBackend",
+        "title": "AI Engineering Framework: Check Backend"
+      },
+      {
+        "command": "aiEngineeringFramework.openDtoCPrompt",
+        "title": "AI Engineering Framework: Open DtoC Prompt"
+      },
+      {
+        "command": "aiEngineeringFramework.prepareDtoCCommand",
+        "title": "AI Engineering Framework: Prepare DtoC Chat Command"
+      }
+    ],
+    "configuration": {
+      "title": "AI Engineering Framework",
+      "properties": {
+        "aiEngineeringFramework.backendUrl": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Base HTTPS URL for the private orchestration backend."
+        },
+        "aiEngineeringFramework.projectId": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Optional private project identifier used by the backend."
+        },
+        "aiEngineeringFramework.healthEndpoint": {
+          "type": "string",
+          "default": "/health",
+          "markdownDescription": "Health-check path appended to `aiEngineeringFramework.backendUrl`."
+        }
+      }
+    },
+    "chatPromptFiles": [
+      {
+        "path": "./prompts/DtoC.prompt.md"
+      }
+    ],
+    "chatInstructions": [
+      {
+        "path": "./instructions/private-runtime.instructions.md"
+      }
+    ]
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit -p .",
+    "build": "npm run check-types && node esbuild.js",
+    "watch": "npm-run-all -p watch:types watch:bundle",
+    "watch:types": "tsc --noEmit -w -p .",
+    "watch:bundle": "node esbuild.js --watch",
+    "package": "npm run check-types && node esbuild.js --production",
+    "vscode:prepublish": "npm run package",
+    "vsix": "vsce package --no-yarn --allow-missing-repository"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.6.2",
+    "@types/node": "^20.19.9",
+    "@types/vscode": "^1.104.0",
+    "esbuild": "^0.25.9",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.9.2"
+  }
+}
