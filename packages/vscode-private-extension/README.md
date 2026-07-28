@@ -6,9 +6,7 @@ It is designed for organization-wide internal rollout where users can launch the
 
 ## What this extension contains
 
-- a reusable `DtoC` prompt exposed as a VS Code chat slash command
-- a minimal runtime instruction file
-- commands for backend health checks, prompt preparation, backend session start, and backend contract inspection
+- commands for backend health checks, backend session start, and backend contract inspection
 - a thin client that sends safe workspace context to a protected backend
 
 ## What this extension does not ship
@@ -27,16 +25,12 @@ This extension package is now safe to keep in a separate repository from the bac
 It depends only on:
 
 - the HTTP backend contract
-- the prompt wrapper in this package
-- the minimal local runtime guardrails in this package
 
 It does not require direct filesystem access to backend prompts, orchestration files, hooks, agents, or runtime definitions.
 
 ## Commands
 
 - `AI Engineering Framework: Check Backend`
-- `AI Engineering Framework: Open DtoC Prompt`
-- `AI Engineering Framework: Prepare DtoC Chat Command`
 - `AI Engineering Framework: Start DtoC Backend Session`
 - `AI Engineering Framework: Open Backend Contract`
 
@@ -53,6 +47,8 @@ It does not require direct filesystem access to backend prompts, orchestration f
 ## How To Connect The Backend
 
 This extension does not work alone. It must point to the separate backend repo/service.
+
+Without a configured and reachable backend, the extension should not be treated as a usable workflow entry point.
 
 ### Backend source
 

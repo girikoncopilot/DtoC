@@ -34,8 +34,6 @@
   },
   "activationEvents": [
     "onCommand:aiEngineeringFramework.checkBackend",
-    "onCommand:aiEngineeringFramework.openDtoCPrompt",
-    "onCommand:aiEngineeringFramework.prepareDtoCCommand",
     "onCommand:aiEngineeringFramework.startDtoCSession",
     "onCommand:aiEngineeringFramework.openBackendContract"
   ],
@@ -45,14 +43,6 @@
       {
         "command": "aiEngineeringFramework.checkBackend",
         "title": "AI Engineering Framework: Check Backend"
-      },
-      {
-        "command": "aiEngineeringFramework.openDtoCPrompt",
-        "title": "AI Engineering Framework: Open DtoC Prompt"
-      },
-      {
-        "command": "aiEngineeringFramework.prepareDtoCCommand",
-        "title": "AI Engineering Framework: Prepare DtoC Chat Command"
       },
       {
         "command": "aiEngineeringFramework.startDtoCSession",
@@ -103,17 +93,7 @@
           "markdownDescription": "Timeout in milliseconds for backend handshake requests."
         }
       }
-    },
-    "chatPromptFiles": [
-      {
-        "path": "./prompts/DtoC.prompt.md"
-      }
-    ],
-    "chatInstructions": [
-      {
-        "path": "./instructions/private-runtime.instructions.md"
-      }
-    ]
+    }
   },
   "scripts": {
     "check-types": "tsc --noEmit -p .",

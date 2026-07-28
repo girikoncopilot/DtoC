@@ -4,10 +4,6 @@ function getConfiguration() {
   return vscode.workspace.getConfiguration("aiEngineeringFramework");
 }
 
-function getPromptUri(extensionUri: vscode.Uri) {
-  return vscode.Uri.joinPath(extensionUri, "prompts", "DtoC.prompt.md");
-}
-
 function getBackendContractUri(extensionUri: vscode.Uri) {
   return vscode.Uri.joinPath(extensionUri, "docs", "backend-contract.md");
 }
@@ -326,39 +322,12 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
-  const openDtoCPrompt = vscode.commands.registerCommand(
-    "aiEngineeringFramework.openDtoCPrompt",
-    async () => {
-      const promptUri = getPromptUri(context.extensionUri);
-      const document = await vscode.workspace.openTextDocument(promptUri);
-      await vscode.window.showTextDocument(document, { preview: false });
-    }
-  );
-
   const openBackendContract = vscode.commands.registerCommand(
     "aiEngineeringFramework.openBackendContract",
     async () => {
       const contractUri = getBackendContractUri(context.extensionUri);
       const document = await vscode.workspace.openTextDocument(contractUri);
       await vscode.window.showTextDocument(document, { preview: false });
-    }
-  );
-
-  const prepareDtoCCommand = vscode.commands.registerCommand(
-    "aiEngineeringFramework.prepareDtoCCommand",
-    async () => {
-      const jiraId = await askJiraId();
-
-      if (!jiraId) {
-        return;
-      }
-
-      const commandText = `/DtoC ${jiraId}`;
-      await vscode.env.clipboard.writeText(commandText);
-
-      void vscode.window.showInformationMessage(
-        `Copied ${commandText} to the clipboard. Paste it into Copilot Chat, or use Start DtoC Backend Session for the protected runtime path.`
-      );
     }
   );
 
@@ -444,9 +413,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     checkBackend,
-    openDtoCPrompt,
     openBackendContract,
-    prepareDtoCCommand,
     startDtoCSession
   );
 }

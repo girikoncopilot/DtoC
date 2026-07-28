@@ -22,8 +22,7 @@ Those private assets now belong in the separate backend folder/repo.
 
 - `packages/vscode-private-extension/README.md`
 - `packages/vscode-private-extension/package.json`
-- `packages/vscode-private-extension/prompts/DtoC.prompt.md`
-- `packages/vscode-private-extension/instructions/private-runtime.instructions.md`
+- `packages/vscode-private-extension/src/extension.ts`
 
 ## Build
 
@@ -103,6 +102,8 @@ If the backend is deployed, replace the URL with your hosted backend:
 3. Put the backend URL into VS Code settings
 4. Run `AI Engineering Framework: Check Backend`
 5. Run `AI Engineering Framework: Start DtoC Backend Session`
+
+Without a configured backend, the extension should not be considered operational.
 
 ## Important
 
