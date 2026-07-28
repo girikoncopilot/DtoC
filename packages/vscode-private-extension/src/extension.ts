@@ -48,6 +48,9 @@ function buildSessionDocument(responseData: Record<string, unknown>) {
   const implementationHints = Array.isArray(responseData.implementationHints)
     ? responseData.implementationHints
     : [];
+  const plannedChanges = Array.isArray(responseData.plannedChanges)
+    ? responseData.plannedChanges
+    : [];
   const runtimeChecklist = Array.isArray(responseData.runtimeChecklist)
     ? responseData.runtimeChecklist
     : [];
@@ -61,6 +64,14 @@ function buildSessionDocument(responseData: Record<string, unknown>) {
   const requirementStatus =
     responseData.requirementStatus && typeof responseData.requirementStatus === "object"
       ? (responseData.requirementStatus as Record<string, unknown>)
+      : {};
+  const jira =
+    responseData.jira && typeof responseData.jira === "object"
+      ? (responseData.jira as Record<string, unknown>)
+      : {};
+  const repositoryPlan =
+    responseData.repositoryPlan && typeof responseData.repositoryPlan === "object"
+      ? (responseData.repositoryPlan as Record<string, unknown>)
       : {};
 
   sections.push(`# Protected DtoC Session`);
@@ -132,6 +143,56 @@ function buildSessionDocument(responseData: Record<string, unknown>) {
     sections.push("");
   }
 
+  if (Object.keys(jira).length) {
+    sections.push(`## Jira Retrieval`);
+    sections.push("");
+    sections.push(`- Summary: ${String(jira.summary || "")}`);
+    sections.push(
+      `- Figma Links: ${Array.isArray(jira.figmaLinks) ? jira.figmaLinks.join(", ") || "None" : "None"}`
+    );
+    sections.push(
+      `- Attachments: ${Array.isArray(jira.attachments) ? String(jira.attachments.length) : "0"}`
+    );
+    sections.push(
+      `- Acceptance Criteria Fields: ${Array.isArray(jira.acceptanceCriteria) ? String(jira.acceptanceCriteria.length) : "0"}`
+    );
+    sections.push("");
+  }
+
+  if (Object.keys(repositoryPlan).length) {
+    sections.push(`## Repository Plan`);
+    sections.push("");
+    sections.push(`- Repo Type: ${String(repositoryPlan.repoType || "unknown")}`);
+    sections.push(
+      `- Likely Areas: ${Array.isArray(repositoryPlan.likelyAreas) ? repositoryPlan.likelyAreas.join(", ") : "None"}`
+    );
+    sections.push(
+      `- Files To Inspect: ${Array.isArray(repositoryPlan.filesToInspect) ? repositoryPlan.filesToInspect.join(", ") : "None"}`
+    );
+    const buildRun =
+      repositoryPlan.buildRun && typeof repositoryPlan.buildRun === "object"
+        ? (repositoryPlan.buildRun as Record<string, unknown>)
+        : {};
+    if (Object.keys(buildRun).length) {
+      sections.push(`- Build Command: ${String(buildRun.build || "")}`);
+      sections.push(`- Run Command: ${String(buildRun.run || "")}`);
+      sections.push(`- Preview Command: ${String(buildRun.preview || "")}`);
+    }
+    if (Array.isArray(repositoryPlan.reuseMap) && repositoryPlan.reuseMap.length) {
+      sections.push(
+        `- Reuse Map: ${repositoryPlan.reuseMap.map((item) => String(item)).join(" | ")}`
+      );
+    }
+    sections.push("");
+  }
+
+  if (plannedChanges.length) {
+    sections.push(`## Planned Changes`);
+    sections.push("");
+    sections.push(...plannedChanges.map((item) => `- ${String(item)}`));
+    sections.push("");
+  }
+
   return sections.join("\n");
 }
 
@@ -160,9 +221,37 @@ async function fetchJson(url: string, init: RequestInit = {}) {
   }
 }
 
-function getWorkspaceSummary() {
+async function getWorkspaceSummary() {
   const workspaceFolders = vscode.workspace.workspaceFolders ?? [];
   const activeEditor = vscode.window.activeTextEditor;
+  const fileUris = await vscode.workspace.findFiles(
+    "**/*.{ts,tsx,js,jsx,html,scss,css,json,md}",
+    "**/{node_modules,dist,build,.git,.angular,.next,out,coverage}/**",
+    200
+  );
+
+  const firstFolder = workspaceFolders[0];
+  const fileInventory = fileUris.map((uri) => {
+    if (!firstFolder) {
+      return uri.fsPath;
+    }
+    return vscode.workspace.asRelativePath(uri, false);
+  });
+
+  let topLevelEntries: string[] = [];
+  if (firstFolder) {
+    try {
+      const entries = await vscode.workspace.fs.readDirectory(firstFolder.uri);
+      topLevelEntries = entries.map(([name]) => name);
+    } catch {
+      topLevelEntries = [];
+    }
+  }
+  const buildFiles = fileInventory.filter((file) =>
+    /(^|\/)(angular\.json|package\.json|pnpm-lock\.yaml|yarn\.lock|package-lock\.json|nx\.json|workspace\.json|project\.json)$/i.test(
+      file
+    )
+  );
 
   return {
     workspaceName: vscode.workspace.name ?? "",
@@ -170,7 +259,10 @@ function getWorkspaceSummary() {
       name: folder.name,
       path: folder.uri.fsPath
     })),
-    activeFile: activeEditor?.document.uri.fsPath ?? ""
+    activeFile: activeEditor?.document.uri.fsPath ?? "",
+    fileInventory,
+    topLevelEntries,
+    buildFiles
   };
 }
 
@@ -295,7 +387,7 @@ export function activate(context: vscode.ExtensionContext) {
           jiraId,
           projectId: String(getConfigValue("projectId", "")).trim(),
           extensionVersion: "0.2.0",
-          workspace: getWorkspaceSummary()
+          workspace: await getWorkspaceSummary()
         };
 
         const response = await fetchJson(sessionUrl, {

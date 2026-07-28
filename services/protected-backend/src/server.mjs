@@ -113,7 +113,7 @@ const server = createServer(async (request, response) => {
       json(
         response,
         200,
-        createRuntimeSession({
+        await createRuntimeSession({
           body,
           runtimeVersion,
           projectId

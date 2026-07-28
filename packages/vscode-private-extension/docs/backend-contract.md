@@ -14,6 +14,7 @@ The VS Code extension should only:
 
 - collect the Jira ID
 - collect safe workspace metadata
+- collect a bounded repository file inventory for planning enrichment
 - check backend health and capabilities
 - start protected runtime sessions
 - show user-safe results returned by the backend
@@ -25,6 +26,7 @@ The backend should own:
 - prompt resolution
 - runtime orchestration
 - Jira and Figma retrieval policy
+- Jira issue retrieval and normalization
 - planning rules
 - validation rules
 - review rules
@@ -90,7 +92,22 @@ Suggested request:
         "path": "/workspace/sample-project"
       }
     ],
-    "activeFile": "/workspace/sample-project/src/app/app.component.ts"
+    "activeFile": "/workspace/sample-project/src/app/app.component.ts",
+    "fileInventory": [
+      "src/app/correspondence/correspondence.component.ts",
+      "src/app/correspondence/correspondence.component.html",
+      "angular.json",
+      "package.json"
+    ],
+    "topLevelEntries": [
+      "src",
+      "angular.json",
+      "package.json"
+    ],
+    "buildFiles": [
+      "angular.json",
+      "package.json"
+    ]
   }
 }
 ```
@@ -102,6 +119,12 @@ Suggested response:
   "sessionId": "session_123",
   "chatCommand": "/DtoC ABC-123",
   "promptText": "Backend-approved workflow instructions for this Jira task.",
+  "jira": {
+    "summary": "Issue summary"
+  },
+  "repositoryPlan": {
+    "repoType": "angular"
+  },
   "notices": [
     "Using protected runtime v2026.07.28"
   ]

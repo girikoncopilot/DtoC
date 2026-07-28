@@ -29,7 +29,7 @@ const skillRules = [
   { skill: "uploads", patterns: [/upload/i, /attachment/i, /document/i, /file/i] },
   { skill: "preview", patterns: [/preview/i, /view/i, /modal/i] },
   { skill: "accessibility", patterns: [/accessibility/i, /keyboard/i, /screen reader/i, /aria/i] },
-  { skill: "dashboard", patterns: [/dashboard/i, /summary/i, /widget/i] },
+  { skill: "dashboard", patterns: [/dashboard/i, /widget/i] },
   { skill: "authentication", patterns: [/login/i, /authentication/i, /authorization/i, /permission/i] }
 ];
 
@@ -89,14 +89,33 @@ export function detectSkills({ requirementText, workspaceSummary }) {
     requirementText || "",
     workspaceSummary?.workspaceName || "",
     ...(workspaceSummary?.folders || []).map((folder) => folder.name || ""),
-    workspaceSummary?.activeFile || ""
+    workspaceSummary?.activeFile || "",
+    ...(workspaceSummary?.fileInventory || []),
+    ...(workspaceSummary?.topLevelEntries || [])
   ].join("\n");
 
   const detected = skillRules
     .filter((rule) => rule.patterns.some((pattern) => pattern.test(haystack)))
     .map((rule) => rule.skill);
 
-  return detected.length ? detected : ["forms", "tables"];
+  const enriched = new Set(detected);
+  const haystackLower = haystack.toLowerCase();
+
+  if (haystackLower.includes("correspondence")) {
+    enriched.add("forms");
+    enriched.add("tables");
+    enriched.add("uploads");
+  }
+
+  if (haystackLower.includes("attachment") || haystackLower.includes("upload")) {
+    enriched.add("uploads");
+  }
+
+  if (haystackLower.includes("table") || haystackLower.includes("column")) {
+    enriched.add("tables");
+  }
+
+  return enriched.size ? Array.from(enriched) : ["forms", "tables"];
 }
 
 export function buildFrameworkSummary(framework) {

@@ -4,6 +4,8 @@ import {
   detectSkills,
   loadFramework
 } from "./framework.mjs";
+import { createJiraClientFromEnv } from "./jira.mjs";
+import { enrichRepositoryPlan } from "./repository-planner.mjs";
 
 function normalizeJiraId(input) {
   return String(input || "")
@@ -20,7 +22,10 @@ function normalizeWorkspace(workspace) {
       name: String(folder?.name || "").trim(),
       path: String(folder?.path || "").trim()
     })),
-    activeFile: String(source.activeFile || "").trim()
+    activeFile: String(source.activeFile || "").trim(),
+    fileInventory: Array.isArray(source.fileInventory) ? source.fileInventory : [],
+    topLevelEntries: Array.isArray(source.topLevelEntries) ? source.topLevelEntries : [],
+    buildFiles: Array.isArray(source.buildFiles) ? source.buildFiles : []
   };
 }
 
@@ -50,31 +55,77 @@ function buildImplementationHints({ requirementText, detectedSkills, workspaceSu
   return hints;
 }
 
-export function createRuntimeSession({
+function buildPlannedChanges({ repositoryPlan, jiraIssue, detectedSkills }) {
+  const planned = [];
+
+  for (const filePath of repositoryPlan.filesToModify || []) {
+    planned.push(`Modify: ${filePath}`);
+  }
+
+  if (detectedSkills.includes("tables")) {
+    planned.push("Validate displayed columns and data-source bindings for table changes.");
+  }
+
+  if (detectedSkills.includes("uploads")) {
+    planned.push("Review upload validation, attachment handling, and backend header/data flow.");
+  }
+
+  if (jiraIssue?.figmaLinks?.length) {
+    planned.push("Attempt Figma retrieval for discovered design links before UI implementation.");
+  }
+
+  return planned;
+}
+
+export async function createRuntimeSession({
   body,
   runtimeVersion,
   projectId
 }) {
+  const jiraClient = createJiraClientFromEnv();
+  const jiraId = normalizeJiraId(body.jiraId);
+  const jiraIssue = jiraClient ? await jiraClient.fetchIssue(jiraId) : null;
   const framework = loadFramework();
   const frameworkSummary = buildFrameworkSummary(framework);
-  const jiraId = normalizeJiraId(body.jiraId);
   const workflow = String(body.workflow || "DtoC").trim() || "DtoC";
-  const requirementText = String(body.requirementText || body.requirements || "").trim();
+  const requirementText = String(
+    body.requirementText ||
+      body.requirements ||
+      jiraIssue?.businessSummary ||
+      jiraIssue?.descriptionText ||
+      ""
+  ).trim();
   const workspaceSummary = normalizeWorkspace(body.workspace);
   const detectedSkills = detectSkills({ requirementText, workspaceSummary });
+  const repositoryPlan = enrichRepositoryPlan({
+    workspace: workspaceSummary,
+    jiraIssue,
+    requirementText,
+    detectedSkills
+  });
   const implementationHints = buildImplementationHints({
     requirementText,
     detectedSkills,
     workspaceSummary
   });
+  const plannedChanges = buildPlannedChanges({
+    repositoryPlan,
+    jiraIssue,
+    detectedSkills
+  });
 
   const notices = [
     `Using protected runtime ${runtimeVersion}.`,
     projectId ? `Project context: ${projectId}.` : "No backend project id configured.",
-    requirementText
-      ? "Requirement text supplied directly to backend session."
-      : "No Jira requirement text supplied. Backend will require acceptance criteria before implementation."
+    jiraIssue
+      ? `Jira retrieval succeeded for ${jiraIssue.id}.`
+      : requirementText
+        ? "Requirement text supplied directly to backend session."
+        : "No Jira requirement text supplied. Backend will require acceptance criteria before implementation."
   ];
+  if (jiraIssue?.figmaLinks?.length) {
+    notices.push(`Discovered Figma links: ${jiraIssue.figmaLinks.join(", ")}`);
+  }
 
   return {
     sessionId: `session_${Date.now()}`,
@@ -91,7 +142,8 @@ export function createRuntimeSession({
     notices,
     requirementStatus: {
       hasRequirementText: Boolean(requirementText),
-      requiresUserInput: !requirementText
+      requiresUserInput: !requirementText,
+      source: jiraIssue ? "jira" : requirementText ? "direct-input" : "missing"
     },
     frameworkContext: {
       runtimeEntry: "Implement Jira Prompt",
@@ -100,6 +152,7 @@ export function createRuntimeSession({
       projectOptimized: true
     },
     implementationHints,
+    plannedChanges,
     runtimeChecklist: [
       "Repository Analysis",
       "Jira Analysis",
@@ -114,9 +167,11 @@ export function createRuntimeSession({
     ],
     sourcePriorities: [
       "Jira acceptance criteria",
-      "Repository architecture",
+      "Repository architecture and reuse map",
       "Approved design evidence",
       "Framework runtime rules"
-    ]
+    ],
+    jira: jiraIssue,
+    repositoryPlan
   };
 }
