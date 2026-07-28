@@ -1,100 +1,40 @@
 # AI Engineering Framework Private VS Code Extension
 
-This package is the protected thin-client version of the AI Engineering Framework.
-
-It is designed for organization-wide internal rollout where users can launch the workflow in VS Code without receiving the proprietary framework source files in the shipped extension.
+This package bundles the AI Engineering Framework directly into a private VS Code extension for internal testing.
 
 ## What this extension contains
 
-- commands for backend health checks, backend session start, and backend contract inspection
-- a thin client that sends safe workspace context to a protected backend
+- a reusable `DtoC` prompt exposed as a VS Code chat slash command
+- a bundled copy of the framework assets from the repository root
+- a runtime instruction file that tells the workflow to use the packaged framework resources
+- commands for backend health checks, prompt preparation, and opening the bundled framework overview
 
-## What this extension does not ship
+## Bundled framework assets
 
-- prompts folder from the internal framework
-- runtime definitions from the internal framework
-- instructions, hooks, agents, or skills from the internal framework
-- proprietary orchestration, validation, or review heuristics
+The extension packages these framework resources into `bundled-framework/` during build and package time:
 
-The protected logic is expected to live behind a private backend or MCP service.
+- `copilot-instructions.md`
+- `prompts/`
+- `instructions/`
+- `runtime/`
+- `hooks/`
+- `agents/`
+- `skills/`
 
-## Clean Split
-
-This extension package is now safe to keep in a separate repository from the backend.
-
-It depends only on:
-
-- the HTTP backend contract
-
-It does not require direct filesystem access to backend prompts, orchestration files, hooks, agents, or runtime definitions.
+This is intended to make the extension behave much closer to the original repo-based workflow even when the user workspace does not contain the framework files.
 
 ## Commands
 
 - `AI Engineering Framework: Check Backend`
-- `AI Engineering Framework: Start DtoC Backend Session`
-- `AI Engineering Framework: Open Backend Contract`
+- `AI Engineering Framework: Open DtoC Prompt`
+- `AI Engineering Framework: Open Bundled Framework Overview`
+- `AI Engineering Framework: Prepare DtoC Chat Command`
 
 ## Configuration
 
 - `aiEngineeringFramework.backendUrl`
 - `aiEngineeringFramework.projectId`
 - `aiEngineeringFramework.healthEndpoint`
-- `aiEngineeringFramework.capabilitiesEndpoint`
-- `aiEngineeringFramework.sessionEndpoint`
-- `aiEngineeringFramework.apiToken`
-- `aiEngineeringFramework.requestTimeoutMs`
-
-## How To Connect The Backend
-
-This extension does not work alone. It must point to the separate backend repo/service.
-
-Without a configured and reachable backend, the extension should not be treated as a usable workflow entry point.
-
-### Backend source
-
-Use the backend from:
-
-- local folder: `/Users/mayankdhyani/Downloads/dtocbackend`
-- GitHub repo: `girikoncopilot/DtoC-backend`
-
-### Start the backend
-
-Example:
-
-```bash
-cd "/Users/mayankdhyani/Downloads/dtocbackend"
-node src/server.mjs
-```
-
-### Put the backend link in VS Code
-
-Open VS Code settings JSON and add:
-
-```json
-{
-  "aiEngineeringFramework.backendUrl": "http://127.0.0.1:8787",
-  "aiEngineeringFramework.healthEndpoint": "/health",
-  "aiEngineeringFramework.capabilitiesEndpoint": "/capabilities",
-  "aiEngineeringFramework.sessionEndpoint": "/runtime/session"
-}
-```
-
-If the backend is deployed on a server, replace `http://127.0.0.1:8787` with your live backend URL.
-
-### Verify connection
-
-After saving the settings:
-
-1. run `AI Engineering Framework: Check Backend`
-2. confirm the backend is reachable
-3. run `AI Engineering Framework: Start DtoC Backend Session`
-
-### Connection flow
-
-1. this extension collects Jira ID and safe workspace context
-2. it sends that data to `aiEngineeringFramework.backendUrl`
-3. the backend returns the protected runtime session payload
-4. the extension shows the returned session instructions to the user
 
 ## Build
 
@@ -110,18 +50,4 @@ pnpm run package
 pnpm run vsix
 ```
 
-## Runtime model
-
-The extension should feel fast while keeping accuracy high by following this pattern:
-
-- keep startup commands local and lightweight
-- do health checks and capability checks early
-- send only minimal workspace metadata to the backend
-- let the backend own prompts, orchestration rules, and validation logic
-- return only user-safe workflow output to the client
-
-## Security model
-
-This design improves protection because the shipped extension does not contain the full framework source.
-
-It does not make the client fully opaque, but it keeps the proprietary engineering logic on infrastructure you control.
+The `bundle:framework` step runs automatically before build/package and refreshes `bundled-framework/` from the repository root.

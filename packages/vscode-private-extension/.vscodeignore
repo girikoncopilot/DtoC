@@ -11,5 +11,5 @@ src/**
 tsconfig.json
 node_modules/**
 *.ts
-bundled-framework/**
-scripts/**
+
+!bundled-framework/**
