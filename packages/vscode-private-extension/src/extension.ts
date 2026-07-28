@@ -37,6 +37,77 @@ function getRequestHeaders() {
   return headers;
 }
 
+function looksLikeUsefulRequirementText(text: string) {
+  const candidate = text.trim();
+
+  if (!candidate) {
+    return false;
+  }
+
+  if (candidate.startsWith("{") || candidate.startsWith("[")) {
+    return true;
+  }
+
+  return /acceptance criteria|summary:|description:|as an .* user|figma|attachment|jira/i.test(
+    candidate
+  );
+}
+
+function normalizeForwardedJira(value: unknown) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return undefined;
+  }
+
+  const jira = value as Record<string, unknown>;
+  return {
+    id: String(jira.id || jira.key || "").trim(),
+    summary: String(jira.summary || "").trim(),
+    descriptionText: String(jira.descriptionText || jira.description || "").trim(),
+    acceptanceCriteria: Array.isArray(jira.acceptanceCriteria)
+      ? jira.acceptanceCriteria
+      : [],
+    comments: Array.isArray(jira.comments) ? jira.comments : [],
+    attachments: Array.isArray(jira.attachments) ? jira.attachments : [],
+    figmaLinks: Array.isArray(jira.figmaLinks) ? jira.figmaLinks : [],
+    labels: Array.isArray(jira.labels) ? jira.labels : [],
+    components: Array.isArray(jira.components) ? jira.components : [],
+    priority: String(jira.priority || "").trim(),
+    businessSummary: String(jira.businessSummary || "").trim()
+  };
+}
+
+function parseForwardedContext(rawText: string) {
+  const text = rawText.trim();
+
+  if (!text) {
+    return {};
+  }
+
+  if (text.startsWith("{") || text.startsWith("[")) {
+    try {
+      const parsed = JSON.parse(text) as Record<string, unknown>;
+      const forwardedJira = normalizeForwardedJira(
+        parsed.jira && typeof parsed.jira === "object" ? parsed.jira : parsed
+      );
+
+      return {
+        requirementText: String(
+          parsed.requirementText || parsed.requirements || parsed.descriptionText || ""
+        ).trim(),
+        jira: forwardedJira
+      };
+    } catch {
+      return {
+        requirementText: text
+      };
+    }
+  }
+
+  return {
+    requirementText: text
+  };
+}
+
 function buildSessionDocument(responseData: Record<string, unknown>) {
   const sections: string[] = [];
   const promptText = String(responseData.promptText || "").trim();
@@ -269,6 +340,26 @@ async function askJiraId() {
   });
 }
 
+async function getForwardedJiraContext() {
+  const activeEditor = vscode.window.activeTextEditor;
+  const selectedText =
+    activeEditor && !activeEditor.selection.isEmpty
+      ? activeEditor.document.getText(activeEditor.selection).trim()
+      : "";
+
+  if (selectedText) {
+    return parseForwardedContext(selectedText);
+  }
+
+  const clipboardText = (await vscode.env.clipboard.readText()).trim();
+
+  if (looksLikeUsefulRequirementText(clipboardText)) {
+    return parseForwardedContext(clipboardText);
+  }
+
+  return {};
+}
+
 export function activate(context: vscode.ExtensionContext) {
   const checkBackend = vscode.commands.registerCommand(
     "aiEngineeringFramework.checkBackend",
@@ -351,12 +442,14 @@ export function activate(context: vscode.ExtensionContext) {
       }
 
       try {
+        const forwardedContext = await getForwardedJiraContext();
         const payload = {
           workflow: "DtoC",
           jiraId,
           projectId: String(getConfigValue("projectId", "")).trim(),
           extensionVersion: "0.2.0",
-          workspace: await getWorkspaceSummary()
+          workspace: await getWorkspaceSummary(),
+          ...forwardedContext
         };
 
         const response = await fetchJson(sessionUrl, {
