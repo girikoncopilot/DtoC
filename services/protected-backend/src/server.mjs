@@ -1,4 +1,5 @@
 import { createServer } from "node:http";
+import { createRuntimeSession } from "./runtime-session.mjs";
 
 const host = process.env.AEF_HOST || "127.0.0.1";
 const port = Number(process.env.AEF_PORT || "8787");
@@ -66,57 +67,6 @@ function normalizeJiraId(input) {
     .toUpperCase();
 }
 
-function createPromptText({ jiraId, workspaceName, folderNames }) {
-  const workspaceLine = workspaceName
-    ? `Open workspace: ${workspaceName}.`
-    : "No workspace name was provided by the client.";
-
-  const folderLine = folderNames.length
-    ? `Workspace folders detected: ${folderNames.join(", ")}.`
-    : "No workspace folders were provided by the client.";
-
-  return [
-    `Use the protected AI Engineering Framework runtime for Jira ${jiraId}.`,
-    "",
-    "Execute the Implement Jira Prompt.",
-    "",
-    "Follow the runtime exactly.",
-    "",
-    workspaceLine,
-    folderLine,
-    "",
-    "Treat the backend-issued workflow as authoritative for this session.",
-    "",
-    "If Jira details are not already available through connected integrations, ask for the acceptance criteria or ticket details before implementation."
-  ].join("\n");
-}
-
-function createSessionPayload(body) {
-  const jiraId = normalizeJiraId(body.jiraId);
-  const workspace = body.workspace || {};
-  const folders = Array.isArray(workspace.folders) ? workspace.folders : [];
-  const folderNames = folders
-    .map((folder) => String(folder?.name || "").trim())
-    .filter(Boolean);
-  const notices = [
-    `Using protected runtime ${runtimeVersion}.`,
-    projectId ? `Project context: ${projectId}.` : "No backend project id configured."
-  ];
-
-  return {
-    sessionId: `session_${Date.now()}`,
-    workflow: body.workflow || "DtoC",
-    jiraId,
-    chatCommand: `/DtoC ${jiraId}`,
-    promptText: createPromptText({
-      jiraId,
-      workspaceName: String(workspace.workspaceName || "").trim(),
-      folderNames
-    }),
-    notices
-  };
-}
-
 const server = createServer(async (request, response) => {
   const method = request.method || "GET";
   const url = new URL(request.url || "/", `http://${request.headers.host || `${host}:${port}`}`);
@@ -160,7 +110,15 @@ const server = createServer(async (request, response) => {
         return;
       }
 
-      json(response, 200, createSessionPayload(body));
+      json(
+        response,
+        200,
+        createRuntimeSession({
+          body,
+          runtimeVersion,
+          projectId
+        })
+      );
     } catch (error) {
       json(response, 400, {
         error: "invalid_request",

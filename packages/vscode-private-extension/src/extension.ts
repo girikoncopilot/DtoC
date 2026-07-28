@@ -41,6 +41,100 @@ function getRequestHeaders() {
   return headers;
 }
 
+function buildSessionDocument(responseData: Record<string, unknown>) {
+  const sections: string[] = [];
+  const promptText = String(responseData.promptText || "").trim();
+  const notices = Array.isArray(responseData.notices) ? responseData.notices : [];
+  const implementationHints = Array.isArray(responseData.implementationHints)
+    ? responseData.implementationHints
+    : [];
+  const runtimeChecklist = Array.isArray(responseData.runtimeChecklist)
+    ? responseData.runtimeChecklist
+    : [];
+  const sourcePriorities = Array.isArray(responseData.sourcePriorities)
+    ? responseData.sourcePriorities
+    : [];
+  const frameworkContext =
+    responseData.frameworkContext && typeof responseData.frameworkContext === "object"
+      ? (responseData.frameworkContext as Record<string, unknown>)
+      : {};
+  const requirementStatus =
+    responseData.requirementStatus && typeof responseData.requirementStatus === "object"
+      ? (responseData.requirementStatus as Record<string, unknown>)
+      : {};
+
+  sections.push(`# Protected DtoC Session`);
+  sections.push("");
+  sections.push(`- Session ID: ${String(responseData.sessionId || "")}`);
+  sections.push(`- Workflow: ${String(responseData.workflow || "")}`);
+  sections.push(`- Jira ID: ${String(responseData.jiraId || "")}`);
+  sections.push(`- Chat Command: ${String(responseData.chatCommand || "")}`);
+  sections.push("");
+
+  if (notices.length) {
+    sections.push(`## Notices`);
+    sections.push("");
+    sections.push(...notices.map((notice) => `- ${String(notice)}`));
+    sections.push("");
+  }
+
+  sections.push(`## Backend-Issued Runtime Instructions`);
+  sections.push("");
+  sections.push(promptText || "No prompt text returned.");
+  sections.push("");
+
+  if (Object.keys(frameworkContext).length) {
+    sections.push(`## Framework Context`);
+    sections.push("");
+    sections.push(
+      `- Runtime Entry: ${String(frameworkContext.runtimeEntry || "Unknown")}`
+    );
+    sections.push(`- DtoC Prompt: ${String(frameworkContext.dtoCPrompt || "Unknown")}`);
+    sections.push(
+      `- Detected Skills: ${Array.isArray(frameworkContext.detectedSkills) ? frameworkContext.detectedSkills.join(", ") : "None"}`
+    );
+    sections.push(
+      `- Project Optimized: ${String(frameworkContext.projectOptimized || false)}`
+    );
+    sections.push("");
+  }
+
+  if (runtimeChecklist.length) {
+    sections.push(`## Runtime Checklist`);
+    sections.push("");
+    sections.push(...runtimeChecklist.map((item) => `- ${String(item)}`));
+    sections.push("");
+  }
+
+  if (implementationHints.length) {
+    sections.push(`## Implementation Hints`);
+    sections.push("");
+    sections.push(...implementationHints.map((item) => `- ${String(item)}`));
+    sections.push("");
+  }
+
+  if (sourcePriorities.length) {
+    sections.push(`## Source Priorities`);
+    sections.push("");
+    sections.push(...sourcePriorities.map((item) => `- ${String(item)}`));
+    sections.push("");
+  }
+
+  if (Object.keys(requirementStatus).length) {
+    sections.push(`## Requirement Status`);
+    sections.push("");
+    sections.push(
+      `- Requirement Text Supplied: ${String(requirementStatus.hasRequirementText || false)}`
+    );
+    sections.push(
+      `- Requires User Input: ${String(requirementStatus.requiresUserInput || false)}`
+    );
+    sections.push("");
+  }
+
+  return sections.join("\n");
+}
+
 async function fetchJson(url: string, init: RequestInit = {}) {
   const timeoutMs = Number(getConfigValue("requestTimeoutMs", 8000));
   const controller = new AbortController();
@@ -225,10 +319,16 @@ export function activate(context: vscode.ExtensionContext) {
           await vscode.env.clipboard.writeText(chatCommand);
         }
 
-        if (promptText) {
+        const sessionDocument = buildSessionDocument(
+          (response.data && typeof response.data === "object"
+            ? response.data
+            : {}) as Record<string, unknown>
+        );
+
+        if (promptText || sessionDocument) {
           const document = await vscode.workspace.openTextDocument({
             language: "markdown",
-            content: promptText
+            content: sessionDocument
           });
           await vscode.window.showTextDocument(document, { preview: false });
         }
