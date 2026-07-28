@@ -1,15 +1,15 @@
 ---
-name: Bundled Runtime Guardrails
-description: Apply the bundled AI Engineering Framework packaged with this extension and do not assume the workspace itself contains the framework folders.
+name: Protected Runtime Guardrails
+description: Apply the AI Engineering Framework through a protected backend and do not assume the client machine contains the proprietary framework source.
 ---
 Use the local workspace as the implementation surface.
 
-Use the bundled framework resources packaged in this extension as the framework source when the workspace does not contain framework folders.
+Treat the protected backend or MCP service as the authoritative source for proprietary framework behavior.
 
-Do not conclude that the framework is missing simply because the current repository does not contain `prompts/`, `instructions/`, `runtime/`, `hooks/`, `agents/`, or `skills/` directories.
+Do not expect the client workspace or extension package to expose the full internal framework source.
 
-The extension includes those framework assets inside `bundled-framework/` for internal testing.
+Use only the minimum local prompt and instruction surface necessary to start the workflow.
 
-If a private backend is configured, use it as an additional project-specific source rather than as the only source of framework behavior.
+If the backend is unavailable, fail safely and ask for either backend configuration or explicit pasted requirements rather than inventing hidden framework behavior.
 
 Preserve repository-native implementation behavior.

@@ -90,7 +90,7 @@ This makes the system easier to audit, validate, and evolve than a single monoli
 
 - private VS Code extension scaffold
 - `.vsix` packaging flow
-- thin-client architecture that avoids shipping the full framework surface into every consumer repository
+- protected thin-client architecture that avoids shipping the full framework source into every consumer repository
 
 ## Important Prompts
 
@@ -114,14 +114,15 @@ That package currently includes:
 - extension command entrypoints
 - contributed prompt file for `DtoC`
 - contributed runtime instruction file
+- backend contract scaffolding
 - `esbuild` bundling setup
 - `.vsix` packaging setup
 
 ### Built artifact
 
-The currently built extension package is:
+The extension package is produced in:
 
-- `packages/vscode-private-extension/ai-engineering-framework-private-0.1.0.vsix`
+- `packages/vscode-private-extension/`
 
 ### Extension commands
 
@@ -130,6 +131,8 @@ The scaffold currently exposes commands for:
 - backend health check
 - opening the `DtoC` prompt
 - preparing a `/DtoC JIRA-ID` command for chat use
+- starting a protected backend session for `DtoC`
+- opening the backend contract reference
 
 ## Local Development
 
@@ -205,25 +208,25 @@ For internal testing across the organization:
 
 ## Security and Packaging Model
 
-This repository now follows a thin-extension direction.
+This repository now follows a protected thin-extension direction.
 
 That means:
 
 - the framework source stays here
 - the extension exposes only the minimum local experience layer
-- proprietary orchestration should move to a private backend or MCP service over time
+- proprietary orchestration should live on a private backend or MCP service
 
 This is the best path when you want smooth internal adoption without exposing the full working surface in every consumer repository.
 
 ## Current Status
 
-As of July 20, 2026, this repository includes:
+As of July 28, 2026, this repository includes:
 
 - the committed AI Engineering Framework source
 - the new `DtoC` prompt
 - runtime approval and launch-flow enhancements
-- a private VS Code extension scaffold
-- a packaged `.vsix` artifact
+- a protected thin-client VS Code extension scaffold
+- backend contract scaffolding for protected rollout
 
 ## Next Recommended Steps
 
@@ -237,5 +240,5 @@ The best next steps are:
 ## Notes
 
 - This repository is intentionally framework-first rather than application-code-first
-- The extension scaffold is ready for internal testing, but the real backend contract is still the next major integration step
+- The extension scaffold now targets a protected backend-driven rollout, and the backend implementation is the next major integration step
 - The framework is designed to preserve repository-native implementation behavior rather than generic AI coding behavior

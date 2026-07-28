@@ -1,8 +1,8 @@
 {
   "name": "ai-engineering-framework-private",
   "displayName": "AI Engineering Framework",
-  "description": "Private VS Code extension that bundles the AI Engineering Framework resources for internal testing and exposes DtoC as a packaged workflow entry point.",
-  "version": "0.1.0",
+  "description": "Private thin-client VS Code extension for the AI Engineering Framework that delegates proprietary orchestration to a protected backend.",
+  "version": "0.2.0",
   "publisher": "private",
   "private": true,
   "license": "SEE LICENSE IN LICENSE",
@@ -36,7 +36,8 @@
     "onCommand:aiEngineeringFramework.checkBackend",
     "onCommand:aiEngineeringFramework.openDtoCPrompt",
     "onCommand:aiEngineeringFramework.prepareDtoCCommand",
-    "onCommand:aiEngineeringFramework.openBundledFrameworkOverview"
+    "onCommand:aiEngineeringFramework.startDtoCSession",
+    "onCommand:aiEngineeringFramework.openBackendContract"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -54,8 +55,12 @@
         "title": "AI Engineering Framework: Prepare DtoC Chat Command"
       },
       {
-        "command": "aiEngineeringFramework.openBundledFrameworkOverview",
-        "title": "AI Engineering Framework: Open Bundled Framework Overview"
+        "command": "aiEngineeringFramework.startDtoCSession",
+        "title": "AI Engineering Framework: Start DtoC Backend Session"
+      },
+      {
+        "command": "aiEngineeringFramework.openBackendContract",
+        "title": "AI Engineering Framework: Open Backend Contract"
       }
     ],
     "configuration": {
@@ -75,6 +80,27 @@
           "type": "string",
           "default": "/health",
           "markdownDescription": "Health-check path appended to `aiEngineeringFramework.backendUrl`."
+        },
+        "aiEngineeringFramework.capabilitiesEndpoint": {
+          "type": "string",
+          "default": "/capabilities",
+          "markdownDescription": "Capabilities path appended to `aiEngineeringFramework.backendUrl`."
+        },
+        "aiEngineeringFramework.sessionEndpoint": {
+          "type": "string",
+          "default": "/runtime/session",
+          "markdownDescription": "Runtime session path appended to `aiEngineeringFramework.backendUrl`."
+        },
+        "aiEngineeringFramework.apiToken": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Optional bearer token used for authenticated backend requests."
+        },
+        "aiEngineeringFramework.requestTimeoutMs": {
+          "type": "number",
+          "default": 8000,
+          "minimum": 1000,
+          "markdownDescription": "Timeout in milliseconds for backend handshake requests."
         }
       }
     },
@@ -91,14 +117,13 @@
   },
   "scripts": {
     "check-types": "tsc --noEmit -p .",
-    "build": "npm run bundle:framework && npm run check-types && node esbuild.js",
+    "build": "npm run check-types && node esbuild.js",
     "watch": "npm-run-all -p watch:types watch:bundle",
     "watch:types": "tsc --noEmit -w -p .",
     "watch:bundle": "node esbuild.js --watch",
-    "package": "npm run bundle:framework && npm run check-types && node esbuild.js --production",
+    "package": "npm run check-types && node esbuild.js --production",
     "vscode:prepublish": "npm run package",
-    "vsix": "vsce package --no-yarn --allow-missing-repository",
-    "bundle:framework": "node scripts/bundle-framework.mjs"
+    "vsix": "vsce package --no-yarn --allow-missing-repository"
   },
   "devDependencies": {
     "@vscode/vsce": "^3.6.2",
