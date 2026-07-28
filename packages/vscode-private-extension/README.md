@@ -20,6 +20,18 @@ It is designed for organization-wide internal rollout where users can launch the
 
 The protected logic is expected to live behind a private backend or MCP service.
 
+## Clean Split
+
+This extension package is now safe to keep in a separate repository from the backend.
+
+It depends only on:
+
+- the HTTP backend contract
+- the prompt wrapper in this package
+- the minimal local runtime guardrails in this package
+
+It does not require direct filesystem access to backend prompts, orchestration files, hooks, agents, or runtime definitions.
+
 ## Commands
 
 - `AI Engineering Framework: Check Backend`
