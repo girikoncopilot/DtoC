@@ -50,6 +50,56 @@ It does not require direct filesystem access to backend prompts, orchestration f
 - `aiEngineeringFramework.apiToken`
 - `aiEngineeringFramework.requestTimeoutMs`
 
+## How To Connect The Backend
+
+This extension does not work alone. It must point to the separate backend repo/service.
+
+### Backend source
+
+Use the backend from:
+
+- local folder: `/Users/mayankdhyani/Downloads/dtocbackend`
+- GitHub repo: `girikoncopilot/DtoC-backend`
+
+### Start the backend
+
+Example:
+
+```bash
+cd "/Users/mayankdhyani/Downloads/dtocbackend"
+node src/server.mjs
+```
+
+### Put the backend link in VS Code
+
+Open VS Code settings JSON and add:
+
+```json
+{
+  "aiEngineeringFramework.backendUrl": "http://127.0.0.1:8787",
+  "aiEngineeringFramework.healthEndpoint": "/health",
+  "aiEngineeringFramework.capabilitiesEndpoint": "/capabilities",
+  "aiEngineeringFramework.sessionEndpoint": "/runtime/session"
+}
+```
+
+If the backend is deployed on a server, replace `http://127.0.0.1:8787` with your live backend URL.
+
+### Verify connection
+
+After saving the settings:
+
+1. run `AI Engineering Framework: Check Backend`
+2. confirm the backend is reachable
+3. run `AI Engineering Framework: Start DtoC Backend Session`
+
+### Connection flow
+
+1. this extension collects Jira ID and safe workspace context
+2. it sends that data to `aiEngineeringFramework.backendUrl`
+3. the backend returns the protected runtime session payload
+4. the extension shows the returned session instructions to the user
+
 ## Build
 
 ```bash

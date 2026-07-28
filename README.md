@@ -44,6 +44,66 @@ In VS Code:
 3. Choose `Install from VSIX...`
 4. Select the generated `.vsix`
 
+## Connect To Backend
+
+The extension repo and backend repo connect through VS Code settings.
+
+### Backend repo
+
+Run the backend separately from:
+
+- `/Users/mayankdhyani/Downloads/dtocbackend`
+- or your private GitHub backend repo: `girikoncopilot/DtoC-backend`
+
+### Backend URL setting
+
+In VS Code, open:
+
+- `Settings`
+- search for `AI Engineering Framework`
+
+Set:
+
+- `aiEngineeringFramework.backendUrl`
+- `aiEngineeringFramework.healthEndpoint`
+- `aiEngineeringFramework.capabilitiesEndpoint`
+- `aiEngineeringFramework.sessionEndpoint`
+- `aiEngineeringFramework.apiToken` if your backend auth is enabled
+
+### Example local setup
+
+If the backend is running locally on port `8787`, use:
+
+```json
+{
+  "aiEngineeringFramework.backendUrl": "http://127.0.0.1:8787",
+  "aiEngineeringFramework.healthEndpoint": "/health",
+  "aiEngineeringFramework.capabilitiesEndpoint": "/capabilities",
+  "aiEngineeringFramework.sessionEndpoint": "/runtime/session"
+}
+```
+
+### Example live setup
+
+If the backend is deployed, replace the URL with your hosted backend:
+
+```json
+{
+  "aiEngineeringFramework.backendUrl": "https://your-backend-url",
+  "aiEngineeringFramework.healthEndpoint": "/health",
+  "aiEngineeringFramework.capabilitiesEndpoint": "/capabilities",
+  "aiEngineeringFramework.sessionEndpoint": "/runtime/session"
+}
+```
+
+### How both repos work together
+
+1. Install the `.vsix` from this repo
+2. Start the backend from `DtoC-backend`
+3. Put the backend URL into VS Code settings
+4. Run `AI Engineering Framework: Check Backend`
+5. Run `AI Engineering Framework: Start DtoC Backend Session`
+
 ## Important
 
 This repo is only the extension-facing distribution surface.
