@@ -4,6 +4,7 @@
   "description": "Private VS Code extension that bundles the AI Engineering Framework resources for internal testing and exposes DtoC as a packaged workflow entry point.",
   "version": "0.1.0",
   "publisher": "private",
+  "icon": "assets/citizens-bank-extension-logo.png",
   "private": true,
   "license": "SEE LICENSE IN LICENSE",
   "engines": {
