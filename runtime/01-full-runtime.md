@@ -50,6 +50,10 @@ Launch Agent
       │
 LaunchSummary
       │
+Jira Completion Comment
+      │
+JiraCompletionCommentStatus
+      │
 Before Completion Hook
       │
 Runtime Complete

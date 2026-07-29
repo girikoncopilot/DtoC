@@ -59,6 +59,10 @@ Verify:
 - Engineering review completed.
 - ReviewDecision exists.
 - LaunchSummary exists when automatic compile/run is required.
+- Jira completion comment was attempted when all of the following are true:
+  - the task is Jira-based
+  - successful completion was reached
+  - Jira write access is available through a connected Jira integration
 - Runtime completed successfully.
 
 ---
@@ -71,11 +75,19 @@ Stop runtime termination.
 
 Report runtime failure.
 
+If the Jira completion comment could not be posted because Jira write access was unavailable or the connected Jira write action failed:
+
+Do not fail runtime termination for that reason alone.
+
+Record the comment status in the final output.
+
 ---
 
 # Success Criteria
 
 Runtime terminates only after all required final runtime artifacts, including launch evidence when applicable, have been produced.
+
+When Jira write-back is available for a successfully completed Jira task, runtime termination should occur only after the Jira completion comment attempt has been made and its result has been recorded.
 
 ---
 

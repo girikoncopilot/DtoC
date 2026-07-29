@@ -17,3 +17,5 @@ ValidationReport
 ReviewDecision
 
 LaunchSummary
+
+JiraCompletionCommentStatus

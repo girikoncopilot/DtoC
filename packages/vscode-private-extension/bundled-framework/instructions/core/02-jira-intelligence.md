@@ -234,7 +234,37 @@ Explain:
 Never invent visual behavior that was expected to come from the design source.
  
 ---
- 
+
+# 4B. Jira Completion Comment Contract
+
+For Jira implementation tasks, the runtime may write a completion comment back to Jira only after successful engineering completion.
+
+Successful engineering completion means:
+
+- validation passed
+- review approved
+- launch evidence exists when automatic compile/run is required
+
+If Jira write access is available through Jira MCP or an equivalent connected Jira integration, the runtime shall attempt to post the exact completion comment:
+
+`this ticket was solved with the help of DtoC framework`
+
+This write-back is operational reporting only.
+
+It shall never be treated as implementation evidence, validation evidence, or proof that the business requirement is satisfied.
+
+If Jira write access is unavailable, denied, or fails:
+
+- do not fail the implementation because of the comment step alone
+- record that the Jira completion comment was not posted
+- preserve the successful engineering outcome if all real completion gates already passed
+
+The runtime shall never post the completion comment before validation and review are complete.
+
+The runtime shall never imply that a Jira comment means the implementation is correct.
+
+---
+
 # 5. Jira Reading Strategy
  
 The Jira must be read in four passes.

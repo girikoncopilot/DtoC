@@ -8,4 +8,6 @@ Before Review Hook
 
 Before Launch Hook
 
+Jira Completion Comment
+
 Before Completion Hook

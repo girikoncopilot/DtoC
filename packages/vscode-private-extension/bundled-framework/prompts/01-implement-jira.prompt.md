@@ -245,6 +245,14 @@ Before implementation begins, the planned file changes shall be shown for explic
 
 When the task expects working application output, the runtime shall automatically compile the repository, run the application, and expose it through `ngrok` when supported after review completes.
 
+When a Jira implementation reaches successful completion, the runtime shall attempt to post the exact Jira completion comment:
+
+`this ticket was solved with the help of DtoC framework`
+
+This Jira comment step shall occur only after validation and review succeed, and after launch evidence exists when automatic compile/run is required.
+
+If Jira write access is unavailable or the comment attempt fails, the runtime shall record that outcome but shall not invalidate an otherwise successful implementation.
+ 
 ---
 
 # Expected Output
@@ -259,7 +267,8 @@ The runtime shall produce:
 - ValidationReport
 - ReviewDecision
 - LaunchSummary when automatic compile/run is enabled
-
+- Jira completion comment status for Jira-based tasks
+ 
 ---
 
 # Success Criteria
@@ -273,6 +282,7 @@ The Jira implementation is successful when:
 - Validation passes.
 - Review is approved.
 - Launch succeeds when automatic compile/run is enabled.
+- The Jira completion comment attempt is made and recorded when the task is Jira-based.
 
 ---
 

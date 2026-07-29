@@ -442,6 +442,35 @@ Implementation failed validation.
 Requires engineering revision.
  
 ---
+
+# 17A. Jira Completion Comment Status
+
+For Jira-based tasks, document whether the runtime attempted to post the Jira completion comment.
+
+When relevant, report:
+
+- Jira identifier
+- comment text used
+- write method used
+- post status
+- failure reason when not posted
+
+If the runtime posted a completion comment, the exact text shall be:
+
+`this ticket was solved with the help of DtoC framework`
+
+Valid statuses include:
+
+- POSTED
+- NOT_ATTEMPTED_NO_WRITE_ACCESS
+- FAILED_TO_POST
+- NOT_APPLICABLE
+
+This section is operational reporting only.
+
+It shall never be presented as implementation evidence or validation evidence.
+
+---
  
 # 18. Reviewer Notes
  
@@ -502,6 +531,8 @@ The Output Engine is complete only when:
 ✓ Remaining risks have been documented.
  
 ✓ Completion status has been assigned.
+
+✓ Jira completion comment status has been documented for Jira-based tasks.
  
 ✓ The engineering report is review-ready.
  
