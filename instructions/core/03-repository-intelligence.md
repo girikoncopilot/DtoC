@@ -354,6 +354,17 @@ Location
 Reason for reuse
  
 Consistency benefits
+
+For filtering work, this documentation shall also include:
+
+- the closest existing filter section in the application
+- the exact files implementing that section
+- the filter row or panel structure used there
+- the controls used there
+- the styling/layout approach used there
+- the state and API integration pattern used there
+
+For filter-related Jira tasks, repository analysis is incomplete until the closest reusable filter implementation has been identified or its absence has been explicitly documented.
  
 Existing UI patterns take precedence over framework defaults.
  

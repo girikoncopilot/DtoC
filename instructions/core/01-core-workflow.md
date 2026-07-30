@@ -239,6 +239,10 @@ Locate:
 Search for similar features.
  
 Identify reusable implementations.
+
+For filter-related Jira work, identify the closest existing filter implementation in the repository and treat it as the primary reference section.
+
+Document the reference feature, reference files, control structure, layout approach, and reuse rationale before planning begins.
  
 Understand:
  
@@ -290,6 +294,10 @@ Files to modify
 Files to create
  
 Existing implementations to reuse
+
+For filtering tasks, the reuse list shall explicitly name the existing filter section being mirrored.
+
+If no such section can be named, the plan shall explain why a new filter arrangement is necessary.
  
 Potential risks
  

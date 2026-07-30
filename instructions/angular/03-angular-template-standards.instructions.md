@@ -103,6 +103,18 @@ Locate existing implementations of:
 The repository defines the implementation standard.
  
 Never invent new UI patterns when equivalent implementations already exist.
+
+For filters specifically, the AI shall mirror the nearest existing filter section from the repository rather than assembling a fresh arrangement from generic controls.
+
+This includes mirroring:
+
+- control order
+- row structure
+- wrapper/container pattern
+- labels
+- spacing and alignment
+- existing CSS class usage
+- interaction affordances such as reset/apply behavior
  
 ---
  

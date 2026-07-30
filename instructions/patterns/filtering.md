@@ -89,6 +89,25 @@ Reuse repository implementations.
 
 Never create a second filtering architecture.
 
+When the Jira asks for a filter, the AI shall locate the closest already-implemented filter section in the repository and treat that implementation as the primary structural reference.
+
+The objective is not merely to reuse generic filter controls.
+
+The objective is to reproduce the repository's already-approved filter experience for:
+
+- layout
+- control grouping
+- spacing
+- labels
+- reset/apply behavior
+- API wiring
+- state handling
+- styling
+
+If another section already implements the same or highly similar filter requirement, the new implementation shall mirror that section unless the Jira explicitly requires a deviation.
+
+If no close repository filter reference exists, the AI shall explicitly document that absence before introducing a new filter arrangement.
+
 ---
 
 # 5. Filter Philosophy
@@ -118,6 +137,16 @@ Before implementation determine:
 - Are filters persisted?
 
 Repository discovery is mandatory.
+
+For filter work, discovery is not complete until the AI has identified:
+
+- the closest matching existing filter section
+- the files that implement it
+- the exact controls used there
+- the layout/styling pattern used there
+- the state and API flow used there
+
+Planning and implementation shall reference that discovered filter section explicitly.
 
 ---
 
@@ -201,6 +230,8 @@ Reuse repository implementations for:
 
 Do not introduce custom filter controls without repository justification.
 
+Do not compose a new filter row from scratch when the repository already contains a proven filter row for a similar business flow.
+
 ---
 
 # 11. Filter Chips
@@ -253,6 +284,34 @@ Examples:
 - Preserve pagination controls
 
 Never invent pagination behavior.
+
+---
+
+# 14A. Similar-Section Mirror Rule
+
+For Jira tasks that say to add or implement filtering:
+
+The AI shall prefer:
+
+1. extending the nearest existing filter implementation in the same feature area
+2. mirroring the nearest existing filter implementation from another section of the application
+3. creating a new filter structure only when no reusable section exists
+
+The AI shall not stop at control-level reuse.
+
+It shall mirror the proven section's:
+
+- DOM structure
+- visual grouping
+- control order
+- spacing rhythm
+- CSS class strategy
+- event flow
+- service integration
+- reset behavior
+- test pattern
+
+If the final plan does not name the reference section being mirrored, planning for filter work is incomplete.
 
 ---
 

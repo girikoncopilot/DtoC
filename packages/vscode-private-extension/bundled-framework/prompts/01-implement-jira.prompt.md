@@ -243,6 +243,10 @@ Do not merge responsibilities between phases.
 
 Before implementation begins, the planned file changes shall be shown for explicit human accept/reject review.
 
+When the Jira requires filtering, the runtime shall first identify the closest existing filter implementation elsewhere in the repository and mirror that implementation's structure, layout, control grouping, state flow, and styling unless the Jira explicitly requires a deviation.
+
+Filter work is incomplete if it only reuses generic controls but fails to mirror the repository's already-approved filter pattern where a close example exists.
+
 When the task expects working application output, the runtime shall automatically compile the repository, run the application, and expose it through `ngrok` when supported after review completes.
 
 When a Jira implementation reaches successful completion, the runtime shall attempt to post the exact Jira completion comment:

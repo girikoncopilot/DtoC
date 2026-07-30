@@ -187,6 +187,17 @@ Existing Utilities
 If a reusable implementation exists, extending it shall take precedence over creating a new one.
  
 Creation of new artifacts requires documented justification.
+
+For filter-related requirements, the implementation plan shall explicitly identify the closest existing filter implementation already present in the repository and state that the new work will mirror or extend it.
+
+The plan shall include:
+
+- reference feature or section
+- reference files
+- filter controls being reused
+- layout or CSS pattern being reused
+- state and API pattern being reused
+- any intentional deviation and its justification
  
 ---
  
