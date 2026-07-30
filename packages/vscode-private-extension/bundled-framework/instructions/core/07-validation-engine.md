@@ -200,6 +200,21 @@ Validate:
 Framework defaults shall not replace existing repository patterns.
  
 If a similar UI exists elsewhere in the application, verify that the new implementation follows that pattern.
+
+If the implementation plan named a reference section to mirror, validation shall explicitly compare the delivered UI against that named section.
+
+For repository-first UI reuse, validation shall verify:
+
+- structure matches the reference section
+- control placement matches the reference section
+- grouping matches the reference section
+- spacing and alignment follow the reference section
+- CSS class or layout strategy follows the reference section where applicable
+- interactions such as clear, apply, sorting, filtering, and pagination preserve the reference behavior
+
+Functional correctness alone is insufficient when the Jira depends on an already-approved repository UI pattern.
+
+If the final implementation is functionally correct but materially diverges from the named reference section without explicit approved justification, validation shall fail.
  
 ---
  
@@ -270,6 +285,18 @@ Unit Test
 Validation Result
  
 Every implemented behavior shall be traceable back to the original Jira.
+
+When a reference section was named during planning, traceability shall also include:
+
+Reference Section
+
+↓
+
+Mirrored UI Evidence
+
+↓
+
+Validation Result
  
 ---
  

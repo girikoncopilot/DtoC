@@ -224,6 +224,8 @@ Example
  
 Every requirement shall have implementation evidence.
 
+When repository-first UI reuse was required, requirement evidence shall also identify the named reference section and the implementation evidence showing that the delivered UI mirrors it.
+
 ---
 
 # 10A. External Evidence Coverage
@@ -252,12 +254,18 @@ If required external evidence was missing or not retrieved, the output shall rep
 # 11. Business Rule Coverage
  
 Provide:
- 
+
 Business Rule
- 
+
 Implementation Evidence
  
 Validation Result
+
+When relevant, include:
+
+- Reference Section
+- Mirrored Behavior or Layout Evidence
+- Deviation Justification
  
 Every documented business rule shall be accounted for.
 

@@ -52,6 +52,8 @@ Verify:
 - ImplementationPlan exists.
 - Planned file changes were shown to the user.
 - User approval for the planned change set was recorded.
+- When repository-first UI reuse is required, the plan names the reference section being mirrored.
+- When filter-related UI work is planned, the plan does not replace the reference pattern with a generic alternate layout unless a justified deviation is explicitly recorded.
 - Runtime order respected.
 
 ---
@@ -68,7 +70,7 @@ Do not execute Implementer.
 
 # Success Criteria
 
-Implementation begins only with a valid ImplementationPlan and explicit approval of the planned file changes.
+Implementation begins only with a valid ImplementationPlan, explicit approval of the planned file changes, and a valid reference-lock decision when reuse-first UI work depends on an existing repository section.
 
 ---
 

@@ -52,6 +52,7 @@ Verify:
 
 - Implementation completed.
 - Tests completed.
+- When the plan named a reference section for reuse-first UI work, implementation evidence confirms that the reference pattern was actually mirrored or that a justified deviation was recorded.
 - Runtime order respected.
 
 ---
@@ -68,7 +69,7 @@ Do not execute Validator.
 
 # Success Criteria
 
-Validation begins only after implementation and testing have completed.
+Validation begins only after implementation and testing have completed, and after reference-pattern fidelity can be evaluated when the plan depended on an existing repository section.
 
 ---
 

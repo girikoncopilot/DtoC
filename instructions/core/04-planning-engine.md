@@ -198,6 +198,23 @@ The plan shall include:
 - layout or CSS pattern being reused
 - state and API pattern being reused
 - any intentional deviation and its justification
+
+For any repository-first UI work that depends on an existing reference section, the plan shall contain a reference-lock decision.
+
+Reference-lock means:
+
+- the named repository section is treated as the canonical structural reference
+- the intended implementation must mirror that section's layout and interaction pattern
+- deviations are allowed only when the Jira explicitly requires them or when the repository cannot technically support exact parity
+
+If a reference section is identified but the plan still proposes a new layout pattern, alternate control placement, or generic replacement pattern without explicit justification, the plan is invalid.
+
+For filter-related work specifically, the plan shall not say only "add filter" or "add search row."
+
+It shall state whether the implementation will:
+
+- extend the existing filter section in the target feature, or
+- mirror the exact filter UI pattern from the named reference section
  
 ---
  
