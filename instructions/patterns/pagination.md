@@ -71,6 +71,18 @@ Typical strategies include:
 
 Do not introduce a different strategy without explicit business requirements.
 
+When the Jira requires pagination or paginated table/list behavior, the AI shall locate the closest already-implemented pagination section in the repository and mirror it before introducing any new pagination arrangement.
+
+This includes mirroring:
+
+- paginator type
+- placement
+- page-size behavior
+- reset behavior
+- filter/search/sort preservation
+- loading and empty-state interaction
+- API contract shape
+
 ---
 
 # 6. State Management

@@ -55,6 +55,18 @@ Reuse existing dialog infrastructure.
 
 Never introduce a second dialog architecture.
 
+When the Jira requires a dialog, the AI shall locate the closest already-implemented dialog in the repository and treat that implementation as the primary reference.
+
+The AI shall mirror the repository's already-approved dialog pattern for:
+
+- shell structure
+- header/body/footer layout
+- sizing
+- actions order
+- close behavior
+- scrolling behavior
+- styling and spacing
+
 ---
 
 # 4. Dialog Philosophy
@@ -82,6 +94,12 @@ Before creating a dialog determine:
 - Is there a repository dialog template?
 
 Reuse before creating.
+
+For dialog work, discovery is incomplete until the AI has identified:
+
+- the closest matching existing dialog
+- the files that implement it
+- the exact structure and action layout used there
 
 ---
 

@@ -86,6 +86,18 @@ Reuse existing search infrastructure.
 
 Never introduce a second search architecture.
 
+When the Jira requires search, the AI shall locate the closest already-implemented search experience in the repository and treat that implementation as the primary reference.
+
+The AI shall mirror the repository's already-approved search behavior for:
+
+- input placement
+- debounce behavior
+- clear/reset behavior
+- loading indicators
+- result update pattern
+- filter/sort/pagination interaction
+- styling and layout structure
+
 ---
 
 # 5. Search Philosophy
@@ -115,6 +127,13 @@ Before implementation determine:
 - Is debounce already implemented?
 
 Reuse existing implementations.
+
+For search work, discovery is incomplete until the AI has identified:
+
+- the closest matching existing search section
+- the files that implement it
+- the exact debounce, state, and API pattern used there
+- the visible layout and loading behavior used there
 
 ---
 

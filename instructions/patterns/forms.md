@@ -70,6 +70,18 @@ Reuse existing implementations.
 
 Never introduce a second form architecture.
 
+When the Jira requires a form, form row, or filter form, the AI shall locate the closest already-implemented form section in the repository and treat it as the primary structural reference.
+
+The AI shall mirror the proven repository pattern for:
+
+- field grouping
+- wrapper structure
+- label placement
+- spacing and alignment
+- validation placement
+- reset/submit behavior
+- existing CSS class usage
+
 ---
 
 # 4. Form Philosophy
@@ -99,6 +111,13 @@ Before creating new controls determine:
 - Does the repository provide a standard CSS template?
 
 Always reuse before creating.
+
+For form-related work, discovery is incomplete until the AI has identified:
+
+- the closest matching existing form section
+- the files that implement it
+- the layout/container structure used there
+- the control and validation pattern used there
 
 ---
 

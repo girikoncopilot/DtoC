@@ -83,6 +83,20 @@ Reuse the repository implementation.
 
 Never introduce a second sorting architecture.
 
+When the Jira requires sorting, the AI shall locate the closest already-implemented sorting behavior in the repository and treat that implementation as the primary reference.
+
+The AI shall mirror the proven repository pattern for:
+
+- sort trigger behavior
+- icon treatment
+- active-state display
+- default ordering
+- state handling
+- API request shape
+- pagination/search/filter interaction
+
+If a close sorting reference exists elsewhere in the application, the new implementation shall mirror it unless the Jira explicitly requires a deviation.
+
 ---
 
 # 5. Sorting Philosophy
@@ -111,6 +125,13 @@ Before implementation determine:
 - Repository default ordering?
 
 Reuse existing implementations whenever possible.
+
+For sorting work, discovery is incomplete until the AI has identified:
+
+- the closest matching existing sorting section
+- the files that implement it
+- the exact state and API flow used there
+- the visible sort-indicator behavior used there
 
 ---
 

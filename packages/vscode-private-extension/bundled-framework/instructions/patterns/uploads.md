@@ -69,6 +69,18 @@ Reuse existing implementations.
 
 Never create a second upload framework.
 
+When the Jira requires upload behavior, the AI shall locate the closest already-implemented upload section in the repository and treat that implementation as the primary reference.
+
+The AI shall mirror the repository's already-approved upload pattern for:
+
+- selector layout
+- drag-and-drop behavior
+- progress presentation
+- validation flow
+- success/error messaging
+- preview/download/delete integration
+- styling and spacing
+
 ---
 
 # 4. Upload Philosophy
@@ -99,6 +111,12 @@ Before implementation determine:
 - Does delete already exist?
 
 Reuse existing implementations whenever possible.
+
+For upload work, discovery is incomplete until the AI has identified:
+
+- the closest matching existing upload section
+- the files that implement it
+- the exact validation, progress, and action pattern used there
 
 ---
 

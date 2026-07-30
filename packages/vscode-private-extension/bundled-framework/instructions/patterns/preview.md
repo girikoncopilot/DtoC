@@ -75,6 +75,18 @@ Reuse existing implementation.
 
 Never introduce a second preview architecture.
 
+When the Jira requires preview behavior, the AI shall locate the closest already-implemented preview experience in the repository and treat that implementation as the primary reference.
+
+The AI shall mirror the repository's already-approved preview pattern for:
+
+- entry action placement
+- inline vs dialog behavior
+- loading treatment
+- supported viewer selection
+- error and unsupported-file handling
+- control placement
+- styling and spacing
+
 ---
 
 # 5. Preview Philosophy
@@ -103,6 +115,12 @@ Before implementation determine:
 - Is preview performed inline or inside dialogs?
 
 Reuse existing viewers whenever possible.
+
+For preview work, discovery is incomplete until the AI has identified:
+
+- the closest matching existing preview section
+- the files that implement it
+- the exact viewer and dialog pattern used there
 
 ---
 

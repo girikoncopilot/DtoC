@@ -71,6 +71,23 @@ Reuse the existing implementation.
 
 Do not create a second table architecture.
 
+When the Jira requires a table change, the AI shall locate the closest already-implemented table section in the repository and treat that section as the primary structural reference.
+
+The goal is not only to reuse generic table utilities.
+
+The goal is to mirror the repository's already-approved table experience for:
+
+- DOM structure
+- column layout
+- spacing
+- header and row behavior
+- actions placement
+- filter/search/sort integration
+- loading and empty states
+- styling and CSS class strategy
+
+If a close table reference exists elsewhere in the application, the new implementation shall mirror it unless the Jira explicitly requires a deviation.
+
 ---
 
 # 4. Table Philosophy
@@ -100,6 +117,14 @@ Before implementation determine:
 - Is an existing action column available?
 
 Repository discovery is mandatory.
+
+For table work, discovery is incomplete until the AI has identified:
+
+- the closest matching existing table section
+- the files that implement it
+- the exact table structure used there
+- the related search, filter, sort, and pagination pattern used there
+- the layout and styling approach used there
 
 ---
 
