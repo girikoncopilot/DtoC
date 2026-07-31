@@ -243,6 +243,16 @@ Identify reusable implementations.
 For filter-related Jira work, identify the closest existing filter implementation in the repository and treat it as the primary reference section.
 
 Document the reference feature, reference files, control structure, layout approach, and reuse rationale before planning begins.
+
+Reference choice shall prioritize the nearest visual and structural context, not only the nearest functional capability.
+
+Priority order:
+
+1. same component or page
+2. same feature area
+3. same shell type such as popup, modal, side panel, or full page
+4. same workflow pattern
+5. generic repository-level similarity
  
 Understand:
  
@@ -298,6 +308,8 @@ Existing implementations to reuse
 For filtering tasks, the reuse list shall explicitly name the existing filter section being mirrored.
 
 If no such section can be named, the plan shall explain why a new filter arrangement is necessary.
+
+If more than one plausible reference exists, the plan shall justify why the selected reference outranks the alternatives according to repository context and shell similarity.
  
 Potential risks
  

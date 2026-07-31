@@ -203,6 +203,10 @@ If a similar UI exists elsewhere in the application, verify that the new impleme
 
 If the implementation plan named a reference section to mirror, validation shall explicitly compare the delivered UI against that named section.
 
+Validation shall also verify that the correct reference section was chosen.
+
+If a materially better same-context repository reference existed but the plan selected a lower-priority generic reference instead, validation shall fail even if the final UI is internally consistent with the wrong reference.
+
 For repository-first UI reuse, validation shall verify:
 
 - structure matches the reference section
@@ -211,6 +215,7 @@ For repository-first UI reuse, validation shall verify:
 - spacing and alignment follow the reference section
 - CSS class or layout strategy follows the reference section where applicable
 - interactions such as clear, apply, sorting, filtering, and pagination preserve the reference behavior
+- the selected reference outranked other plausible references by page, feature, shell, and workflow similarity
 
 Functional correctness alone is insufficient when the Jira depends on an already-approved repository UI pattern.
 

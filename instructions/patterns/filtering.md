@@ -108,6 +108,14 @@ If another section already implements the same or highly similar filter requirem
 
 If no close repository filter reference exists, the AI shall explicitly document that absence before introducing a new filter arrangement.
 
+Reference selection shall prioritize visual/context proximity over abstract similarity.
+
+For example:
+
+- a filter inside another popup should normally outrank a filter on a full page
+- a filter inside the same feature module should normally outrank a similar filter from a distant module
+- a filter using the same table shell should normally outrank a generic search-row implementation elsewhere
+
 ---
 
 # 5. Filter Philosophy
@@ -147,6 +155,8 @@ For filter work, discovery is not complete until the AI has identified:
 - the state and API flow used there
 
 Planning and implementation shall reference that discovered filter section explicitly.
+
+If more than one candidate exists, they shall be ranked and the highest-priority same-context candidate shall be chosen unless a deviation is explicitly justified.
 
 ---
 
@@ -294,7 +304,7 @@ For Jira tasks that say to add or implement filtering:
 The AI shall prefer:
 
 1. extending the nearest existing filter implementation in the same feature area
-2. mirroring the nearest existing filter implementation from another section of the application
+2. mirroring the nearest existing filter implementation from another section of the application with the same shell type
 3. creating a new filter structure only when no reusable section exists
 
 The AI shall not stop at control-level reuse.

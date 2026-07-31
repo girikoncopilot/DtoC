@@ -364,6 +364,18 @@ For filtering work, this documentation shall also include:
 - the styling/layout approach used there
 - the state and API integration pattern used there
 
+Reference selection shall follow a strict precedence order.
+
+When multiple reusable UI references exist, prefer:
+
+1. the same component or page being extended
+2. the same route-level feature area
+3. the same shell type such as popup, modal, side panel, tabular section, or full page
+4. the same business workflow
+5. the nearest generic repository implementation
+
+For filter-related Jira tasks, a functionally similar reference from a different shell type shall not outrank a visually and structurally similar reference from the same shell type.
+
 For filter-related Jira tasks, repository analysis is incomplete until the closest reusable filter implementation has been identified or its absence has been explicitly documented.
  
 Existing UI patterns take precedence over framework defaults.

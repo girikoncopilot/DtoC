@@ -207,7 +207,19 @@ Reference-lock means:
 - the intended implementation must mirror that section's layout and interaction pattern
 - deviations are allowed only when the Jira explicitly requires them or when the repository cannot technically support exact parity
 
+The plan shall also document why the selected reference is the highest-priority match.
+
+This justification shall consider:
+
+- same page or same component preference
+- same shell type preference
+- same workflow preference
+- visual and structural similarity
+- lower-ranked alternatives that were rejected
+
 If a reference section is identified but the plan still proposes a new layout pattern, alternate control placement, or generic replacement pattern without explicit justification, the plan is invalid.
+
+If a lower-priority reference section is selected while a higher-priority same-context reference exists, the plan is invalid.
 
 For filter-related work specifically, the plan shall not say only "add filter" or "add search row."
 
